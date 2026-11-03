@@ -273,7 +273,7 @@ function render(){
   !started?"":finished?"ゲーム終了":"現在の手番："+players[current].name;
  const f=$("field");
  if(!started){
-  f.innerHTML=`<div class="field-empty">場</div><div class="field-meta">ルーレットで先攻を決めてください</div>`;
+  f.innerHTML=`<div class="field-empty">場</div><div class="field-meta"></div>`;
  }else if(field){
   const suit=suits.find(s=>s.id===players[field.player].suit);
   f.innerHTML=`
