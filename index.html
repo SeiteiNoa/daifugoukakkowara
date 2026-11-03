@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>大富豪</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#14231f;color:#fff;font-family:system-ui,sans-serif}
+main{max-width:900px;margin:auto;padding:20px}
+h1{text-align:center;font-size:32px;margin:5px}
+button{background:#354c41;color:white;border:1px solid #bca66b;padding:11px 18px;border-radius:9px;cursor:pointer;font-weight:bold}
+button:hover:not(:disabled){background:#536b58}
+button:disabled{opacity:.4;cursor:not-allowed}
+.table{margin-top:20px;padding:16px;background:radial-gradient(#24764d,#10402d);border:7px solid #65472e;border-radius:25px;box-shadow:inset 0 0 0 2px #c09a5d}
+.roulette-launch{text-align:center;margin:12px 0 22px}
+.roulette-instruction{font-weight:bold;font-size:17px;margin-bottom:12px}
+#spinButton{font-size:16px;padding:14px 35px}
+.roulette-overlay{display:none;position:fixed;inset:0;z-index:20;background:#000c;align-items:center;justify-content:center;padding:20px}
+.roulette-dialog{width:min(360px,100%);background:#202d29;border:2px solid #d2b56e;border-radius:20px;padding:25px 15px;display:flex;flex-direction:column;align-items:center;gap:15px;box-shadow:0 10px 40px #0009}
+.wheel-wrap{position:relative;padding-top:12px}
+.pointer{position:absolute;z-index:2;top:0;left:50%;transform:translateX(-50%);width:0;height:0;border-left:12px solid transparent;border-right:12px solid transparent;border-top:25px solid #ffe49a;filter:drop-shadow(0 2px 3px #000)}
+.wheel{width:220px;height:220px;border-radius:50%;position:relative;border:7px solid #d6b76c;background:conic-gradient(from 45deg,#bb4242 0deg 90deg,#386b9d 90deg 180deg,#d0a43c 180deg 270deg,#39845b 270deg 360deg);box-shadow:0 5px 18px #0008,inset 0 0 0 2px #fff5}
+.wheel-label{position:absolute;font-size:14px;font-weight:900;text-shadow:0 1px 3px #000}
+.wl-n{top:18px;left:50%;transform:translateX(-50%)}
+.wl-e{right:12px;top:50%;transform:translateY(-50%)}
+.wl-s{bottom:18px;left:50%;transform:translateX(-50%)}
+.wl-w{left:12px;top:50%;transform:translateY(-50%)}
+#rouletteResult{font-weight:bold;color:#ffe5a0;min-height:25px;text-align:center}
+.seats{display:grid;grid-template-columns:1fr 1fr 1fr;grid-template-rows:auto auto auto;gap:8px;margin-bottom:14px}
+.seat{background:#103b29;border:1px solid #ffffff55;border-radius:10px;padding:10px 5px;text-align:center;min-height:75px;display:flex;flex-direction:column;justify-content:center}
+.seat.active{outline:3px solid #ffdf80;background:#315b39}
+.seat[data-seat="0"]{grid-column:2;grid-row:3}
+.seat[data-seat="1"]{grid-column:1;grid-row:2}
+.seat[data-seat="2"]{grid-column:2;grid-row:1}
+.seat[data-seat="3"]{grid-column:3;grid-row:2}
+.seat-name{font-weight:bold}
+.seat-info{font-size:12px;color:#ddd;margin-top:4px;line-height:1.5}
+.turn{text-align:center;font-weight:bold;margin:12px;min-height:24px}
+.field{min-height:150px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px}
+.field-card{width:74px;height:106px;background:#fffaf0;color:#222;border-radius:10px;border:1px solid #ccc;display:flex;flex-direction:column;justify-content:center;align-items:center;box-shadow:0 5px 10px #0006}
+.field-card.red{color:#c52d3a}
+.field-card .rank{font-size:32px;font-weight:900;line-height:1.1}
+.field-card .suit{font-size:26px;line-height:1.1}
+.field-empty{width:74px;height:106px;border:2px dashed #ffffff66;border-radius:10px;display:flex;align-items:center;justify-content:center;color:#ffffffaa;font-size:13px;text-align:center;padding:6px}
+.field-meta{font-size:14px;color:#e8e2c8;min-height:20px;text-align:center}
+.badge{display:inline-block;background:#bca66b;color:#1c1c1c;border-radius:20px;padding:2px 10px;font-size:12px;font-weight:bold;margin-left:6px}
+#status{text-align:center;min-height:25px;margin-top:15px}
+.controls{text-align:center;margin-top:10px}
+#log{list-style:none;margin:14px auto 0;padding:0;max-width:520px;font-size:13px;color:#cfd8d2;text-align:center;line-height:1.7;min-height:22px}
+.hand-panel{background:#202d29;border:1px solid #53655c;border-radius:15px;padding:15px;margin-top:20px}
+.hand-title{font-weight:bold;margin-bottom:12px}
+.hand{display:flex;justify-content:center;flex-wrap:wrap;gap:7px;min-height:0}
+.card{width:53px;height:77px;background:#fffaf0;color:#222;border-radius:8px;border:1px solid #ccc;display:flex;flex-direction:column;justify-content:center;align-items:center;cursor:pointer;box-shadow:0 3px 5px #0005}
+.card.red{color:#c52d3a}
+.card .rank{font-size:21px;font-weight:900}
+.card .suit{font-size:19px}
+.card.legal{outline:3px solid #f5d77d;transform:translateY(-4px)}
+.card:disabled{opacity:.4;cursor:not-allowed}
+.card:hover:not(:disabled){transform:translateY(-6px)}
+.overlay{display:none;position:fixed;inset:0;background:#000b;align-items:center;justify-content:center;padding:20px;z-index:30}
+.dialog{background:#202d29;border:2px solid #d2b56e;border-radius:18px;padding:25px;text-align:center;width:min(400px,100%)}
+.dialog h2{font-size:28px}
+#resultText{white-space:pre-line;line-height:1.9;font-size:18px}
+@media(max-width:600px){
+ main{padding:10px}
+ .table{padding:9px;border-width:5px}
+ .card{width:42px;height:65px}
+ .wheel{width:190px;height:190px}
+ .seat{padding:7px 2px}
+}
+</style>
+</head>
+<body>
+<main>
+<h1>大富豪</h1>
+<section class="table">
+ <div class="roulette-launch" id="rouletteLaunch">
+  <div class="roulette-instruction">ルーレットで順番を決めましょう！</div>
+  <button id="spinButton">ルーレットを回す</button>
+ </div>
+ <div class="seats" id="seats"></div>
+ <div class="turn" id="turn"></div>
+ <div class="field" id="field"></div>
+ <div class="controls">
+  <button id="passButton" disabled>パスする</button>
+ </div>
+ <div id="status"></div>
+ <ul id="log"></ul>
+</section>
+<section class="hand-panel" id="handPanel">
+ <div class="hand-title" id="handTitle">あなたの手札</div>
+ <div class="hand" id="hand"></div>
+</section>
+</main>
+<div class="roulette-overlay" id="rouletteOverlay">
+ <div class="roulette-dialog">
+  <div class="wheel-wrap">
+   <div class="pointer"></div>
+   <div class="wheel" id="wheel">
+    <span class="wheel-label wl-n">CPU 2</span>
+    <span class="wheel-label wl-e">CPU 3</span>
+    <span class="wheel-label wl-s">YOU</span>
+    <span class="wheel-label wl-w">CPU 1</span>
+   </div>
+  </div>
+  <div id="rouletteResult">抽選中……</div>
+ </div>
+</div>
+<div class="overlay" id="resultOverlay">
+ <div class="dialog">
+  <h2 id="resultTitle">最終結果</h2>
+  <p id="resultText"></p>
+  <button onclick="initGame()">もう一度遊ぶ</button>
+ </div>
+</div>
+<script>
+const suits=[
+ {id:"S",symbol:"♠",name:"スペード",red:false},
+ {id:"H",symbol:"♥",name:"ハート",red:true},
+ {id:"D",symbol:"♦",name:"ダイヤ",red:true},
+ {id:"C",symbol:"♣",name:"クラブ",red:false}
+];
+const players=[
+ {name:"あなた",seat:0,human:true},
+ {name:"CPU 1",seat:1},
+ {name:"CPU 2",seat:2},
+ {name:"CPU 3",seat:3}
+];
+const strengthRanks=["3","4","5","6","7","8","9","10","J","Q","K","A","2"];
+const EIGHT=5;
+const JACK=8;
+let hands=[];
+let current=-1;
+let field=null;
+let back=false;
+let passesSincePlay=0;
+let lastPlayer=-1;
+let out=[];
+let placements=[];
+let finished=false;
+let spinning=false;
+let busy=false;
+let message="";
+let logLines=[];
+const $=id=>document.getElementById(id);
+function shuffle(array){
+ const a=[...array];
+ for(let i=a.length-1;i>0;i--){
+  const j=Math.floor(Math.random()*(i+1));
+  [a[i],a[j]]=[a[j],a[i]];
+ }
+ return a;
+}
+function addLog(text){
+ logLines.unshift(text);
+ logLines=logLines.slice(0,2);
+}
+function initGame(){
+ players.forEach(p=>p.suit=null);
+ hands=players.map(()=>strengthRanks.map((_,s)=>s));
+ current=-1;
+ field=null;
+ back=false;
+ passesSincePlay=0;
+ lastPlayer=-1;
+ out=[false,false,false,false];
+ placements=[];
+ finished=false;
+ spinning=false;
+ busy=false;
+ message="";
+ logLines=[];
+ $("resultOverlay").style.display="none";
+ $("rouletteOverlay").style.display="none";
+ $("wheel").style.transition="none";
+ $("wheel").style.transform="rotate(0deg)";
+ $("spinButton").disabled=false;
+ $("rouletteLaunch").style.display="";
+ $("rouletteResult").textContent="抽選中……";
+ $("status").textContent="";
+ $("turn").textContent="";
+ render();
+}
+function getWinnerFromAngle(targetAngle){
+ const pointerAngle=(360-targetAngle+360)%360;
+ const colorAngle=(pointerAngle-45+360)%360;
+ if(colorAngle<90)return 3;
+ if(colorAngle<180)return 0;
+ if(colorAngle<270)return 1;
+ return 2;
+}
+function spinRoulette(){
+ if(spinning||current!==-1||finished)return;
+ spinning=true;
+ $("spinButton").disabled=true;
+ $("rouletteOverlay").style.display="flex";
+ $("rouletteResult").textContent="抽選中……";
+ const target=Math.random()*360;
+ const winner=getWinnerFromAngle(target);
+ const extraTurns=5+Math.floor(Math.random()*3);
+ const wheelRotation=extraTurns*360+target;
+ const wheel=$("wheel");
+ wheel.style.transition="none";
+ wheel.style.transform="rotate(0deg)";
+ void wheel.offsetWidth;
+ wheel.style.transition="transform 5s cubic-bezier(.08,.72,.08,1)";
+ wheel.style.transform=`rotate(${wheelRotation}deg)`;
+ setTimeout(()=>{
+  $("rouletteResult").textContent=players[winner].name+"から時計回りです";
+  players[winner].suit="S";
+  const rest=shuffle(["H","D","C"]);
+  players.forEach((p,i)=>{
+   if(i!==winner)p.suit=rest.pop();
+  });
+  setTimeout(()=>{
+   $("rouletteOverlay").style.display="none";
+   spinning=false;
+   $("rouletteLaunch").style.display="none";
+   hands[winner]=hands[winner].filter(c=>c!==0);
+   field={player:winner,s:0};
+   lastPlayer=winner;
+   passesSincePlay=0;
+   message=players[winner].name+"：♠3";
+   addLog(message);
+   current=nextActiveAfter(winner);
+   render();
+   if(!players[current].human)scheduleCPU();
+  },1000);
+ },5100);
+}
+function beats(s){
+ if(!field)return true;
+ return back ? s<field.s : s>field.s;
+}
+function legalCards(player){
+ return hands[player].filter(s=>beats(s));
+}
+function activeCount(){
+ return out.filter(o=>!o).length;
+}
+function nextActiveAfter(player){
+ let n=player;
+ for(let i=0;i<4;i++){
+  n=(n+1)%4;
+  if(!out[n])return n;
+ }
+ return player;
+}
+function render(){
+ const started=current>=0;
+ const seats=$("seats");
+ seats.innerHTML="";
+ players.forEach((p,i)=>{
+  const div=document.createElement("div");
+  div.className="seat"+(i===current&&!finished&&!out[i]?" active":"");
+  div.dataset.seat=p.seat;
+  let info="";
+  if(started){
+   if(out[i]){
+    info=`あがり！ ${placements.indexOf(i)+1}位`;
+   }else{
+    info=`残り ${hands[i].length}枚`;
+   }
+  }
+  div.innerHTML=`
+   <div class="seat-name">${p.name}</div>
+   <div class="seat-info">${info}</div>
+  `;
+  seats.appendChild(div);
+ });
+ $("turn").textContent=
+  !started?"":finished?"ゲーム終了":"現在の手番："+players[current].name;
+ const f=$("field");
+ if(!started){
+  f.innerHTML=`<div class="field-empty">場</div><div class="field-meta">ルーレットで先攻を決めてください</div>`;
+ }else if(field){
+  const suit=suits.find(s=>s.id===players[field.player].suit);
+  f.innerHTML=`
+   <div class="field-card${suit.red?" red":""}">
+    <span class="rank">${strengthRanks[field.s]}</span>
+    <span class="suit">${suit.symbol}</span>
+   </div>
+   <div class="field-meta">${back?'<span class="badge">11バック中</span>':""}</div>
+  `;
+ }else{
+  f.innerHTML=`<div class="field-empty">流れ</div><div class="field-meta">${players[current].name}のリードです</div>`;
+ }
+ $("status").textContent=
+  started&&current===0&&!finished&&!out[0]?"あなたの番です":
+  message;
+ $("log").innerHTML=logLines.map(l=>`<li>${l}</li>`).join("");
+ const hand=$("hand");
+ hand.innerHTML="";
+ const humanSuit=suits.find(s=>s.id===players[0].suit);
+ $("handPanel").style.display=started&&!out[0]?"block":"none";
+ if(started&&!out[0]){
+  const humanTurn=current===0&&!busy&&!finished;
+  [...hands[0]].sort((a,b)=>a-b).forEach(s=>{
+   const legal=legalCards(0).includes(s);
+   const btn=document.createElement("button");
+   btn.className="card"+(humanSuit.red?" red":"");
+   if(legal&&humanTurn)btn.classList.add("legal");
+   btn.disabled=!legal||!humanTurn;
+   btn.innerHTML=`
+    <span class="rank">${strengthRanks[s]}</span>
+    <span class="suit">${humanSuit.symbol}</span>
+   `;
+   btn.onclick=()=>playCard(0,s);
+   hand.appendChild(btn);
+  });
+ }
+ $("passButton").disabled=
+  !started||current!==0||busy||finished||out[0]||!field;
+}
+function finishPlayer(player){
+ out[player]=true;
+ placements.push(player);
+ addLog(`${players[player].name}が${placements.length}位で上がりました`);
+ if(placements.length===3){
+  const last=players.findIndex((_,i)=>!out[i]);
+  out[last]=true;
+  placements.push(last);
+  finishMatch();
+  return true;
+ }
+ return false;
+}
+function finishMatch(){
+ finished=true;
+ busy=false;
+ current=-1;
+ render();
+ const titles=["大富豪","富豪","貧民","大貧民"];
+ $("resultTitle").textContent="最終結果";
+ $("resultText").textContent=placements.map((player,index)=>
+  `${index+1}位（${titles[index]}）：${players[player].name}`
+ ).join("\n");
+ $("resultOverlay").style.display="flex";
+}
+function playCard(player,s){
+ if(finished||busy||out[player]||current!==player)return;
+ if(!hands[player].includes(s))return;
+ if(!beats(s))return;
+ const suit=suits.find(x=>x.id===players[player].suit);
+ hands[player]=hands[player].filter(c=>c!==s);
+ field={player,s};
+ lastPlayer=player;
+ passesSincePlay=0;
+ message=`${players[player].name}が ${suit.symbol}${strengthRanks[s]} を出しました`;
+ addLog(message);
+ const isEight=s===EIGHT;
+ const isJack=s===JACK;
+ const wasBack=back;
+ const isUnbeatable=(!wasBack&&s===12)||(wasBack&&s===0);
+ if(isJack&&!back){
+  back=true;
+  addLog("11バック");
+ }
+ if(hands[player].length===0){
+  if(finishPlayer(player))return;
+  if(isEight||isUnbeatable){
+   field=null; back=false;
+   current=nextActiveAfter(player);
+   message=`場が流れて${players[current].name}のリードです`;
+   addLog(message);
+  }else{
+   current=nextActiveAfter(player);
+  }
+  render();
+  if(!finished&&!players[current].human)scheduleCPU();
+  return;
+ }
+ if(isEight){
+  field=null; back=false;
+  message=`8切り`;
+  addLog("8切り");
+  render();
+  if(!players[player].human)scheduleCPU();
+  return;
+ }
+ if(isUnbeatable){
+  field=null; back=false;
+  current=player;
+  message=`場が流れました。${players[current].name}のリードです`;
+  addLog(message);
+  render();
+  if(!players[player].human)scheduleCPU();
+  return;
+ }
+ nextTurn();
+}
+function pass(player){
+ if(finished||busy||out[player]||current!==player||!field)return;
+ passesSincePlay++;
+ message=`${players[player].name}はパスしました`;
+ addLog(message);
+ const lastStillActive=!out[lastPlayer];
+ const required=lastStillActive?activeCount()-1:activeCount();
+ if(passesSincePlay>=required){
+  field=null; back=false; passesSincePlay=0;
+  current=lastStillActive?lastPlayer:nextActiveAfter(lastPlayer);
+  message=`場が流れました。${players[current].name}のリードです`;
+  addLog(message);
+  render();
+  if(!players[current].human)scheduleCPU();
+  return;
+ }
+ nextTurn();
+}
+function nextTurn(){
+ current=nextActiveAfter(current);
+ render();
+ if(!finished&&!players[current].human){
+  scheduleCPU();
+ }
+}
+function scheduleCPU(){
+ if(finished||out[current]||players[current].human)return;
+ busy=true;
+ render();
+ setTimeout(()=>{
+  busy=false;
+  if(finished||out[current]||players[current].human)return;
+  const hand=[...hands[current]].sort((a,b)=>a-b);
+  if(!field){
+   let choice=hand[0];
+   if(hand.length===2&&hand.includes(EIGHT))choice=EIGHT;
+   playCard(current,choice);
+   return;
+  }
+  const moves=legalCards(current).sort((a,b)=>back?b-a:a-b);
+  if(moves.length===0){
+   pass(current);
+   return;
+  }
+  const choice=moves[0];
+  if(strengthRanks[choice]==="2"&&hand.length>=4){
+   pass(current);
+   return;
+  }
+  playCard(current,choice);
+ },400);
+}
+$("spinButton").addEventListener("click",spinRoulette);
+$("passButton").addEventListener("click",()=>pass(0));
+initGame();
+</script>
+</body>
+</html>
