@@ -16,6 +16,9 @@ button:disabled{opacity:.4;cursor:not-allowed}
 .roulette-launch{text-align:center;margin:12px 0 22px}
 .roulette-instruction{font-weight:bold;font-size:17px;margin-bottom:12px}
 #spinButton{font-size:16px;padding:14px 35px}
+.rules-launch{margin-top:12px}
+
+/* ルーレット */
 .roulette-overlay{display:none;position:fixed;inset:0;z-index:20;background:#000c;align-items:center;justify-content:center;padding:20px}
 .roulette-dialog{width:min(360px,100%);background:#202d29;border:2px solid #d2b56e;border-radius:20px;padding:25px 15px;display:flex;flex-direction:column;align-items:center;gap:15px;box-shadow:0 10px 40px #0009}
 .wheel-wrap{position:relative;padding-top:12px}
@@ -27,6 +30,8 @@ button:disabled{opacity:.4;cursor:not-allowed}
 .wl-s{bottom:18px;left:50%;transform:translateX(-50%)}
 .wl-w{left:12px;top:50%;transform:translateY(-50%)}
 #rouletteResult{font-weight:bold;color:#ffe5a0;min-height:25px;text-align:center}
+
+/* 座席 */
 .seats{display:grid;grid-template-columns:1fr 1fr 1fr;grid-template-rows:auto auto auto;gap:8px;margin-bottom:14px}
 .seat{background:#103b29;border:1px solid #ffffff55;border-radius:10px;padding:10px 5px;text-align:center;min-height:75px;display:flex;flex-direction:column;justify-content:center}
 .seat.active{outline:3px solid #ffdf80;background:#315b39}
@@ -37,6 +42,8 @@ button:disabled{opacity:.4;cursor:not-allowed}
 .seat-name{font-weight:bold}
 .seat-info{font-size:12px;color:#ddd;margin-top:4px;line-height:1.5}
 .turn{text-align:center;font-weight:bold;margin:12px;min-height:24px}
+
+/* 場 */
 .field{min-height:150px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px}
 .field-card{width:74px;height:106px;background:#fffaf0;color:#222;border-radius:10px;border:1px solid #ccc;display:flex;flex-direction:column;justify-content:center;align-items:center;box-shadow:0 5px 10px #0006}
 .field-card.red{color:#c52d3a}
@@ -48,6 +55,8 @@ button:disabled{opacity:.4;cursor:not-allowed}
 #status{text-align:center;min-height:25px;margin-top:15px}
 .controls{text-align:center;margin-top:10px}
 #log{list-style:none;margin:14px auto 0;padding:0;max-width:520px;font-size:13px;color:#cfd8d2;text-align:center;line-height:1.7;min-height:22px}
+
+/* 手札 */
 .hand-panel{background:#202d29;border:1px solid #53655c;border-radius:15px;padding:15px;margin-top:20px}
 .hand-title{font-weight:bold;margin-bottom:12px}
 .hand{display:flex;justify-content:center;flex-wrap:wrap;gap:7px;min-height:0}
@@ -58,41 +67,79 @@ button:disabled{opacity:.4;cursor:not-allowed}
 .card.legal{outline:3px solid #f5d77d;transform:translateY(-4px)}
 .card:disabled{opacity:.4;cursor:not-allowed}
 .card:hover:not(:disabled){transform:translateY(-6px)}
+
+/* 選択パネル */
+.select-overlay{display:none;position:fixed;inset:0;z-index:25;background:#000c;align-items:center;justify-content:center;padding:20px}
+.select-dialog{width:min(520px,100%);background:#202d29;border:2px solid #d2b56e;border-radius:18px;padding:25px 15px;box-shadow:0 10px 40px #0009}
+.select-prompt{font-weight:bold;margin-bottom:12px;text-align:center}
+
+/* ルール設定 */
+.rules-dialog{text-align:left;width:min(460px,100%)}
+.rules-dialog h2{text-align:center}
+.rules-dialog .rules-desc{text-align:center}
+.rule-row{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:12px 0}
+.rule-name{font-weight:bold}
+.rule-desc{font-size:12px;color:#ddd;line-height:1.6;margin:-6px 0 10px}
+.switch-set{display:flex;align-items:center;gap:6px;font-size:13px;white-space:nowrap}
+.switch{position:relative;display:inline-block;width:46px;height:26px;flex:none}
+.switch input{opacity:0;width:0;height:0}
+.slider{position:absolute;inset:0;background:#666;border-radius:20px;cursor:pointer;transition:.2s}
+.slider:before{content:"";position:absolute;width:20px;height:20px;left:3px;top:3px;background:#fff;border-radius:50%;transition:.2s}
+.switch input:checked + .slider{background:#39845b}
+.switch input:checked + .slider:before{transform:translateX(20px)}
+.ban-block{margin:12px 0}
+.ban-cols{display:flex;justify-content:space-around;margin-top:8px;gap:6px}
+.ban-col{text-align:center}
+.ban-symbol{font-weight:900;font-size:18px;margin-bottom:6px}
+.rules-ok{text-align:center;margin-top:18px}
+
+/* リザルト */
 .overlay{display:none;position:fixed;inset:0;background:#000b;align-items:center;justify-content:center;padding:20px;z-index:30}
 .dialog{background:#202d29;border:2px solid #d2b56e;border-radius:18px;padding:25px;text-align:center;width:min(400px,100%)}
 .dialog h2{font-size:28px}
 #resultText{white-space:pre-line;line-height:1.9;font-size:18px}
+
 @media(max-width:600px){
  main{padding:10px}
  .table{padding:9px;border-width:5px}
  .card{width:42px;height:65px}
  .wheel{width:190px;height:190px}
  .seat{padding:7px 2px}
+ .ban-cols{flex-wrap:wrap}
 }
 </style>
 </head>
 <body>
 <main>
 <h1>大富豪</h1>
+
 <section class="table">
  <div class="roulette-launch" id="rouletteLaunch">
   <div class="roulette-instruction">ルーレットで順番を決めましょう！</div>
   <button id="spinButton">ルーレットを回す</button>
+  <div class="rules-launch"><button id="rulesButton">ルール設定</button></div>
  </div>
+
  <div class="seats" id="seats"></div>
  <div class="turn" id="turn"></div>
+
  <div class="field" id="field"></div>
+
  <div class="controls">
   <button id="passButton" disabled>パスする</button>
  </div>
  <div id="status"></div>
  <ul id="log"></ul>
 </section>
+
 <section class="hand-panel" id="handPanel">
  <div class="hand-title" id="handTitle">あなたの手札</div>
  <div class="hand" id="hand"></div>
 </section>
+
 </main>
+
+<!-- ルーレット -->
 <div class="roulette-overlay" id="rouletteOverlay">
  <div class="roulette-dialog">
   <div class="wheel-wrap">
@@ -107,6 +154,75 @@ button:disabled{opacity:.4;cursor:not-allowed}
   <div id="rouletteResult">抽選中……</div>
  </div>
 </div>
+
+<!-- 9カードバック選択 -->
+<div class="select-overlay" id="selectPanel">
+ <div class="select-dialog">
+  <div class="select-prompt" id="selectPrompt"></div>
+  <div class="hand" id="selectCards"></div>
+ </div>
+</div>
+
+<!-- ルール設定 -->
+<div class="overlay" id="rulesOverlay">
+ <div class="dialog rules-dialog">
+  <h2>ルール設定</h2>
+  <p class="rules-desc">ローカルルールを追加・削除できます</p>
+
+  <div class="rule-row">
+   <span class="rule-name">8切り</span>
+   <span class="switch-set">オフ<label class="switch"><input type="checkbox" id="setEightCut" checked><span class="slider"></span></label>オン</span>
+  </div>
+
+  <div class="rule-row">
+   <span class="rule-name">Jバック</span>
+   <span class="switch-set">オフ<label class="switch"><input type="checkbox" id="setJBack" checked><span class="slider"></span></label>オン</span>
+  </div>
+
+  <div class="rule-row">
+   <span class="rule-name">5スキップ</span>
+   <span class="switch-set">オフ<label class="switch"><input type="checkbox" id="setFiveSkip" checked><span class="slider"></span></label>オン</span>
+  </div>
+
+  <div class="rule-row">
+   <span class="rule-name">7渡し</span>
+   <span class="switch-set">オフ<label class="switch"><input type="checkbox" id="setSevenPass"><span class="slider"></span></label>オン</span>
+  </div>
+
+  <div class="rule-row">
+   <span class="rule-name">10捨て</span>
+   <span class="switch-set">オフ<label class="switch"><input type="checkbox" id="setTenDiscard"><span class="slider"></span></label>オン</span>
+  </div>
+
+  <div class="rule-row">
+   <span class="rule-name">9カードバック</span>
+   <span class="switch-set">オフ<label class="switch"><input type="checkbox" id="setNineBack"><span class="slider"></span></label>オン</span>
+  </div>
+  <div class="rule-desc">選択した数字が捨て札から全員の手札に戻る。オンの場合9が禁止上がりになる。</div>
+
+  <div class="ban-block">
+   <div class="rule-name">禁止上がり</div>
+   <div class="ban-cols">
+    <div class="ban-col">
+     <div class="ban-symbol">8</div>
+     <span class="switch-set">オフ<label class="switch"><input type="checkbox" id="setBan8" checked><span class="slider"></span></label>オン</span>
+    </div>
+    <div class="ban-col">
+     <div class="ban-symbol">2</div>
+     <span class="switch-set">オフ<label class="switch"><input type="checkbox" id="setBan2"><span class="slider"></span></label>オン</span>
+    </div>
+    <div class="ban-col">
+     <div class="ban-symbol">J</div>
+     <span class="switch-set">オフ<label class="switch"><input type="checkbox" id="setBanJ"><span class="slider"></span></label>オン</span>
+    </div>
+   </div>
+  </div>
+
+  <div class="rules-ok"><button id="rulesOkButton">OK！</button></div>
+ </div>
+</div>
+
+<!-- リザルト -->
 <div class="overlay" id="resultOverlay">
  <div class="dialog">
   <h2 id="resultTitle">最終結果</h2>
@@ -114,6 +230,7 @@ button:disabled{opacity:.4;cursor:not-allowed}
   <button onclick="initGame()">もう一度遊ぶ</button>
  </div>
 </div>
+
 <script>
 const suits=[
  {id:"S",symbol:"♠",name:"スペード",red:false},
@@ -121,29 +238,55 @@ const suits=[
  {id:"D",symbol:"♦",name:"ダイヤ",red:true},
  {id:"C",symbol:"♣",name:"クラブ",red:false}
 ];
+
 const players=[
  {name:"あなた",seat:0,human:true},
  {name:"CPU 1",seat:1},
  {name:"CPU 2",seat:2},
  {name:"CPU 3",seat:3}
 ];
+
+// 強さ順（添字がそのまま強さ：3が最弱、2が最強）
 const strengthRanks=["3","4","5","6","7","8","9","10","J","Q","K","A","2"];
-const EIGHT=5;
-const JACK=8;
+const FIVE=2;    // "5" の強さ添字
+const SEVEN=4;   // "7" の強さ添字
+const EIGHT=5;   // "8" の強さ添字
+const NINE=6;    // "9" の強さ添字
+const TEN=7;     // "10" の強さ添字
+const JACK=8;    // "J" の強さ添字
+
+// ルール設定（初期状態）
+const rules={
+ eightCut:true,
+ jBack:true,
+ fiveSkip:true,
+ sevenPass:false,
+ tenDiscard:false,
+ nineBack:false,
+ ban8:true,
+ ban2:false,
+ banJ:false
+};
+
 let hands=[];
 let current=-1;
-let field=null;
-let back=false;
+let field=null;        // {player, s} 場に出ているカード
+let back=false;        // 11バック中か
 let passesSincePlay=0;
 let lastPlayer=-1;
 let out=[];
-let placements=[];
+let placements=[];     // 通常上がりの順
+let fouls=[];          // 禁止上がり反則の順
+let discardedBy=[];    // 各プレイヤーの捨て札（場に出したカード＋10捨てのカード）
+let pendingAction=null; // {type, player, s, wasBack} 7渡し／10捨て／9カードバックの選択待ち
 let finished=false;
 let spinning=false;
 let busy=false;
 let message="";
 let logLines=[];
+
 const $=id=>document.getElementById(id);
+
 function shuffle(array){
  const a=[...array];
  for(let i=a.length-1;i>0;i--){
@@ -152,13 +295,29 @@ function shuffle(array){
  }
  return a;
 }
+
 function addLog(text){
  logLines.unshift(text);
  logLines=logLines.slice(0,2);
 }
+
+// 手札から指定した強さのカードを1枚だけ取り除く
+function removeOne(player,s){
+ const i=hands[player].indexOf(s);
+ if(i>=0)hands[player].splice(i,1);
+}
+
+function isBanned(s){
+ return (s===EIGHT&&rules.ban8)||(s===12&&rules.ban2)||(s===JACK&&rules.banJ)||(s===NINE&&rules.nineBack);
+}
+
 function initGame(){
+ // スートはまだ決めない。ルーレットで決める
  players.forEach(p=>p.suit=null);
+
+ // 全員まったく同じ13枚（強さ3〜2の全ランク）
  hands=players.map(()=>strengthRanks.map((_,s)=>s));
+
  current=-1;
  field=null;
  back=false;
@@ -166,13 +325,18 @@ function initGame(){
  lastPlayer=-1;
  out=[false,false,false,false];
  placements=[];
+ fouls=[];
+ discardedBy=players.map(()=>new Set());
+ pendingAction=null;
  finished=false;
  spinning=false;
  busy=false;
  message="";
  logLines=[];
+
  $("resultOverlay").style.display="none";
  $("rouletteOverlay").style.display="none";
+ $("rulesOverlay").style.display="none";
  $("wheel").style.transition="none";
  $("wheel").style.transform="rotate(0deg)";
  $("spinButton").disabled=false;
@@ -180,8 +344,11 @@ function initGame(){
  $("rouletteResult").textContent="抽選中……";
  $("status").textContent="";
  $("turn").textContent="";
+
  render();
 }
+
+// ルーレットの停止位置から先攻プレイヤーを判定（クソ7並べから流用）
 function getWinnerFromAngle(targetAngle){
  const pointerAngle=(360-targetAngle+360)%360;
  const colorAngle=(pointerAngle-45+360)%360;
@@ -190,55 +357,71 @@ function getWinnerFromAngle(targetAngle){
  if(colorAngle<270)return 1;
  return 2;
 }
+
 function spinRoulette(){
  if(spinning||current!==-1||finished)return;
  spinning=true;
  $("spinButton").disabled=true;
  $("rouletteOverlay").style.display="flex";
  $("rouletteResult").textContent="抽選中……";
+
  const target=Math.random()*360;
  const winner=getWinnerFromAngle(target);
  const extraTurns=5+Math.floor(Math.random()*3);
  const wheelRotation=extraTurns*360+target;
+
  const wheel=$("wheel");
  wheel.style.transition="none";
  wheel.style.transform="rotate(0deg)";
  void wheel.offsetWidth;
  wheel.style.transition="transform 5s cubic-bezier(.08,.72,.08,1)";
  wheel.style.transform=`rotate(${wheelRotation}deg)`;
+
  setTimeout(()=>{
   $("rouletteResult").textContent=players[winner].name+"から時計回りです";
+
+  // 実はスート決め：1番になった人にスペード、他3人はランダム
   players[winner].suit="S";
   const rest=shuffle(["H","D","C"]);
   players.forEach((p,i)=>{
    if(i!==winner)p.suit=rest.pop();
   });
+
   setTimeout(()=>{
    $("rouletteOverlay").style.display="none";
    spinning=false;
    $("rouletteLaunch").style.display="none";
-   hands[winner]=hands[winner].filter(c=>c!==0);
+
+   // スペードの3を強制的に場に出して開始
+   removeOne(winner,0);
+   discardedBy[winner].add(0);
    field={player:winner,s:0};
    lastPlayer=winner;
    passesSincePlay=0;
    message=players[winner].name+"：♠3";
    addLog(message);
+
    current=nextActiveAfter(winner);
    render();
    if(!players[current].human)scheduleCPU();
   },1000);
  },5100);
 }
+
+// 場より強いカードか（11バック中は強さ逆転）
 function beats(s){
  if(!field)return true;
  return back ? s<field.s : s>field.s;
 }
+
 function legalCards(player){
  return hands[player].filter(s=>beats(s));
 }
+
 function activeCount(){
  return out.filter(o=>!o).length;
 }
+
 function nextActiveAfter(player){
  let n=player;
  for(let i=0;i<4;i++){
@@ -247,10 +430,12 @@ function nextActiveAfter(player){
  }
  return player;
 }
+
 function render(){
  const started=current>=0;
  const seats=$("seats");
  seats.innerHTML="";
+
  players.forEach((p,i)=>{
   const div=document.createElement("div");
   div.className="seat"+(i===current&&!finished&&!out[i]?" active":"");
@@ -258,7 +443,7 @@ function render(){
   let info="";
   if(started){
    if(out[i]){
-    info=`あがり！ ${placements.indexOf(i)+1}位`;
+    info=fouls.includes(i)?`あがり！`:`あがり！ ${placements.indexOf(i)+1}位`;
    }else{
     info=`残り ${hands[i].length}枚`;
    }
@@ -269,11 +454,13 @@ function render(){
   `;
   seats.appendChild(div);
  });
+
  $("turn").textContent=
   !started?"":finished?"ゲーム終了":"現在の手番："+players[current].name;
+
  const f=$("field");
  if(!started){
-  f.innerHTML=`<div class="field-empty">場</div><div class="field-meta"></div>`;
+  f.innerHTML=`<div class="field-empty">場</div><div class="field-meta">ルーレットで先攻を決めてください</div>`;
  }else if(field){
   const suit=suits.find(s=>s.id===players[field.player].suit);
   f.innerHTML=`
@@ -286,38 +473,83 @@ function render(){
  }else{
   f.innerHTML=`<div class="field-empty">流れ</div><div class="field-meta">${players[current].name}のリードです</div>`;
  }
- $("status").textContent=
-  started&&current===0&&!finished&&!out[0]?"あなたの番です":
-  message;
+
+ if(pendingAction&&pendingAction.player===0&&pendingAction.type==="pass7"){
+  $("status").textContent="どのカードを渡しますか？";
+ }else if(pendingAction&&pendingAction.player===0&&pendingAction.type==="discard10"){
+  $("status").textContent="どのカードを捨てますか？";
+ }else{
+  $("status").textContent=
+   started&&current===0&&!finished&&!out[0]?"あなたの番です":
+   message;
+ }
+
  $("log").innerHTML=logLines.map(l=>`<li>${l}</li>`).join("");
+
  const hand=$("hand");
  hand.innerHTML="";
  const humanSuit=suits.find(s=>s.id===players[0].suit);
  $("handPanel").style.display=started&&!out[0]?"block":"none";
+
  if(started&&!out[0]){
+  const selectingHand=pendingAction&&pendingAction.player===0&&(pendingAction.type==="pass7"||pendingAction.type==="discard10");
   const humanTurn=current===0&&!busy&&!finished;
   [...hands[0]].sort((a,b)=>a-b).forEach(s=>{
    const legal=legalCards(0).includes(s);
    const btn=document.createElement("button");
    btn.className="card"+(humanSuit.red?" red":"");
-   if(legal&&humanTurn)btn.classList.add("legal");
-   btn.disabled=!legal||!humanTurn;
+   if(selectingHand){
+    btn.classList.add("legal");
+    btn.disabled=false;
+    btn.onclick=()=>resolveHandSelection(s);
+   }else{
+    if(legal&&humanTurn&&!pendingAction)btn.classList.add("legal");
+    btn.disabled=!legal||!humanTurn||!!pendingAction;
+    btn.onclick=()=>playCard(0,s);
+   }
    btn.innerHTML=`
     <span class="rank">${strengthRanks[s]}</span>
     <span class="suit">${humanSuit.symbol}</span>
    `;
-   btn.onclick=()=>playCard(0,s);
    hand.appendChild(btn);
   });
  }
+
+ // 9カードバックの数字選択
+ const panel=$("selectPanel");
+ if(pendingAction&&pendingAction.player===0&&pendingAction.type==="back9"){
+  panel.style.display="flex";
+  $("selectPrompt").textContent="どのカードを戻しますか？";
+  const box=$("selectCards");
+  box.innerHTML="";
+  strengthRanks.map((_,s)=>s).filter(s=>s!==NINE).forEach(s=>{
+   const btn=document.createElement("button");
+   btn.className="card"+(humanSuit&&humanSuit.red?" red":"");
+   btn.innerHTML=`
+    <span class="rank">${strengthRanks[s]}</span>
+    <span class="suit">${humanSuit?humanSuit.symbol:""}</span>
+   `;
+   btn.onclick=()=>resolveNineBack(s);
+   box.appendChild(btn);
+  });
+ }else{
+  panel.style.display="none";
+ }
+
  $("passButton").disabled=
-  !started||current!==0||busy||finished||out[0]||!field;
+  !started||current!==0||busy||finished||out[0]||!field||!!pendingAction;
 }
-function finishPlayer(player){
+
+// 上がり処理。通常上がりなら true は返さず、対戦が終了したら true を返す
+function outPlayer(player,banned){
  out[player]=true;
- placements.push(player);
- addLog(`${players[player].name}が${placements.length}位で上がりました`);
- if(placements.length===3){
+ if(banned){
+  fouls.push(player);
+ }else{
+  placements.push(player);
+  addLog(`${players[player].name}が${placements.length}位で上がりました`);
+ }
+ if(placements.length+fouls.length===3){
   const last=players.findIndex((_,i)=>!out[i]);
   out[last]=true;
   placements.push(last);
@@ -326,61 +558,37 @@ function finishPlayer(player){
  }
  return false;
 }
+
 function finishMatch(){
  finished=true;
  busy=false;
  current=-1;
+ pendingAction=null;
  render();
  const titles=["大富豪","富豪","貧民","大貧民"];
+ const finalOrder=[...placements,...fouls];
  $("resultTitle").textContent="最終結果";
- $("resultText").textContent=placements.map((player,index)=>
-  `${index+1}位（${titles[index]}）：${players[player].name}`
+ $("resultText").textContent=finalOrder.map((player,index)=>
+  `${index+1}位（${titles[index]}）：${players[player].name}`+(fouls.includes(player)?" 禁止上がりで上がったので失格！":"")
  ).join("\n");
  $("resultOverlay").style.display="flex";
 }
-function playCard(player,s){
- if(finished||busy||out[player]||current!==player)return;
- if(!hands[player].includes(s))return;
- if(!beats(s))return;
- const suit=suits.find(x=>x.id===players[player].suit);
- hands[player]=hands[player].filter(c=>c!==s);
- field={player,s};
- lastPlayer=player;
- passesSincePlay=0;
- message=`${players[player].name}が ${suit.symbol}${strengthRanks[s]} を出しました`;
- addLog(message);
- const isEight=s===EIGHT;
- const isJack=s===JACK;
- const wasBack=back;
- const isUnbeatable=(!wasBack&&s===12)||(wasBack&&s===0);
- if(isJack&&!back){
-  back=true;
-  addLog("11バック");
- }
- if(hands[player].length===0){
-  if(finishPlayer(player))return;
-  if(isEight||isUnbeatable){
-   field=null; back=false;
-   current=nextActiveAfter(player);
-   message=`場が流れて${players[current].name}のリードです`;
-   addLog(message);
-  }else{
-   current=nextActiveAfter(player);
-  }
-  render();
-  if(!finished&&!players[current].human)scheduleCPU();
-  return;
- }
- if(isEight){
-  field=null; back=false;
+
+// カードを出した直後の共通処理（手札が残っている前提。8切り・流れ・5スキップ・通常の手番移動）
+function postPlay(player,s,wasBack){
+ if(s===EIGHT&&rules.eightCut){
+  field=null; back=false; passesSincePlay=0;
   message=`8切り`;
   addLog("8切り");
+  current=player;
   render();
   if(!players[player].human)scheduleCPU();
   return;
  }
+
+ const isUnbeatable=(!wasBack&&s===12)||(wasBack&&s===0);
  if(isUnbeatable){
-  field=null; back=false;
+  field=null; back=false; passesSincePlay=0;
   current=player;
   message=`場が流れました。${players[current].name}のリードです`;
   addLog(message);
@@ -388,16 +596,181 @@ function playCard(player,s){
   if(!players[player].human)scheduleCPU();
   return;
  }
+
+ if(s===FIVE&&rules.fiveSkip){
+  // 飛ばされた人はこの場では出せない（パスしたものとして数える）
+  passesSincePlay=1;
+  const skipped=nextActiveAfter(player);
+  if(passesSincePlay>=activeCount()-1){
+   field=null; back=false; passesSincePlay=0;
+   current=player;
+   message=`場が流れました。${players[current].name}のリードです`;
+   addLog(message);
+   render();
+   if(!players[player].human)scheduleCPU();
+   return;
+  }
+  current=nextActiveAfter(skipped);
+  render();
+  if(!players[current].human)scheduleCPU();
+  return;
+ }
+
  nextTurn();
 }
+
+// 選択が必要な効果（7渡し・10捨て・9カードバック）の開始
+function startPending(type,player,s,wasBack){
+ pendingAction={type,player,s,wasBack};
+ if(players[player].human){
+  render();
+  return;
+ }
+ busy=true;
+ render();
+ setTimeout(()=>{
+  busy=false;
+  if(finished||!pendingAction)return;
+  if(type==="back9"){
+   resolveNineBack(cpuNineChoice(player));
+  }else{
+   resolveHandSelection(cpuHandChoice(player));
+  }
+ },400);
+}
+
+// 7渡し・10捨てで選んだカードの処理
+function resolveHandSelection(s){
+ const pa=pendingAction;
+ if(!pa||(pa.type!=="pass7"&&pa.type!=="discard10"))return;
+ pendingAction=null;
+ const player=pa.player;
+ removeOne(player,s);
+ if(pa.type==="pass7"){
+  const recipient=nextActiveAfter(player);
+  hands[recipient].push(s);
+ }else{
+  discardedBy[player].add(s);
+ }
+ afterEffect(player,pa.s,pa.wasBack);
+}
+
+// 9カードバックで選んだ数字の処理
+function resolveNineBack(s){
+ const pa=pendingAction;
+ if(!pa||pa.type!=="back9")return;
+ pendingAction=null;
+ players.forEach((_,i)=>{
+  if(out[i])return;
+  if(discardedBy[i].has(s)&&!hands[i].includes(s)){
+   hands[i].push(s);
+   discardedBy[i].delete(s);
+  }
+ });
+ afterEffect(pa.player,pa.s,pa.wasBack);
+}
+
+// 効果の解決後：手札が0枚なら上がり、残っていれば出したカードの続きの処理
+function afterEffect(player,s,wasBack){
+ if(hands[player].length===0){
+  if(outPlayer(player,false))return;
+  current=nextActiveAfter(player);
+  render();
+  if(!finished&&!players[current].human)scheduleCPU();
+  return;
+ }
+ postPlay(player,s,wasBack);
+}
+
+function cpuHandChoice(player){
+ return [...hands[player]].sort((a,b)=>a-b)[0];
+}
+
+function cpuNineChoice(player){
+ const self=[...discardedBy[player]].filter(c=>!hands[player].includes(c));
+ if(self.length)return Math.max(...self);
+ let best=0,bestCount=Infinity;
+ strengthRanks.map((_,s)=>s).filter(s=>s!==NINE).forEach(s=>{
+  let count=0;
+  players.forEach((_,i)=>{
+   if(i!==player&&!out[i]&&discardedBy[i].has(s)&&!hands[i].includes(s))count++;
+  });
+  if(count<bestCount){bestCount=count;best=s;}
+ });
+ return best;
+}
+
+function playCard(player,s){
+ if(finished||busy||out[player]||current!==player||pendingAction)return;
+ if(!hands[player].includes(s))return;
+ if(!beats(s))return;
+
+ const suit=suits.find(x=>x.id===players[player].suit);
+ const wasBack=back;
+ removeOne(player,s);
+ field={player,s};
+ lastPlayer=player;
+ passesSincePlay=0;
+ discardedBy[player].add(s);
+ message=`${players[player].name}が ${suit.symbol}${strengthRanks[s]} を出しました`;
+ addLog(message);
+
+ const isJack=s===JACK;
+ if(isJack&&rules.jBack&&!back){
+  back=true;
+  addLog("11バック");
+ }
+
+ if(hands[player].length===0){
+  // 上がり（禁止上がりの対象なら反則上がり）
+  const banned=isBanned(s);
+  if(outPlayer(player,banned))return;
+  const isUnbeatable=(!wasBack&&s===12)||(wasBack&&s===0);
+  if((s===EIGHT&&rules.eightCut)||isUnbeatable){
+   field=null; back=false; passesSincePlay=0;
+   current=nextActiveAfter(player);
+   message=`場が流れて${players[current].name}のリードです`;
+   addLog(message);
+  }else if(s===FIVE&&rules.fiveSkip){
+   // 5で上がってもスキップは消えない。飛ばされた人はこの場では出せない
+   passesSincePlay=1;
+   const skipped=nextActiveAfter(player);
+   current=nextActiveAfter(skipped);
+  }else{
+   current=nextActiveAfter(player);
+  }
+  render();
+  if(!finished&&!players[current].human)scheduleCPU();
+  return;
+ }
+
+ if(s===SEVEN&&rules.sevenPass){
+  startPending("pass7",player,s,wasBack);
+  return;
+ }
+ if(s===TEN&&rules.tenDiscard){
+  startPending("discard10",player,s,wasBack);
+  return;
+ }
+ if(s===NINE&&rules.nineBack){
+  startPending("back9",player,s,wasBack);
+  return;
+ }
+
+ postPlay(player,s,wasBack);
+}
+
 function pass(player){
- if(finished||busy||out[player]||current!==player||!field)return;
+ if(finished||busy||out[player]||current!==player||!field||pendingAction)return;
  passesSincePlay++;
  message=`${players[player].name}はパスしました`;
  addLog(message);
+
  const lastStillActive=!out[lastPlayer];
  const required=lastStillActive?activeCount()-1:activeCount();
+
  if(passesSincePlay>=required){
+  // 全員パスで場が流れる
   field=null; back=false; passesSincePlay=0;
   current=lastStillActive?lastPlayer:nextActiveAfter(lastPlayer);
   message=`場が流れました。${players[current].name}のリードです`;
@@ -406,8 +779,10 @@ function pass(player){
   if(!players[current].human)scheduleCPU();
   return;
  }
+
  nextTurn();
 }
+
 function nextTurn(){
  current=nextActiveAfter(current);
  render();
@@ -415,35 +790,69 @@ function nextTurn(){
   scheduleCPU();
  }
 }
+
 function scheduleCPU(){
- if(finished||out[current]||players[current].human)return;
+ if(finished||pendingAction||out[current]||players[current].human)return;
  busy=true;
  render();
+
  setTimeout(()=>{
   busy=false;
-  if(finished||out[current]||players[current].human)return;
+  if(finished||out[current]||players[current].human||pendingAction)return;
+
   const hand=[...hands[current]].sort((a,b)=>a-b);
+
   if(!field){
+   // リード：基本は一番弱いカード。ただし残り2枚で8を持っていれば8切りから入る
    let choice=hand[0];
-   if(hand.length===2&&hand.includes(EIGHT))choice=EIGHT;
+   if(rules.eightCut&&hand.length===2&&hand.includes(EIGHT))choice=EIGHT;
    playCard(current,choice);
    return;
   }
+
   const moves=legalCards(current).sort((a,b)=>back?b-a:a-b);
   if(moves.length===0){
    pass(current);
    return;
   }
-  const choice=moves[0];
+  const choice=moves[0]; // 出せる中で一番弱いカード
+
+  // 最後の1枚が禁止上がりの対象なら、場があるときはパスして避ける
+  if(hand.length===1&&isBanned(choice)){
+   pass(current);
+   return;
+  }
+
+  // 温存判断：最強の2しか出せない場合は残り枚数が多いうちはパス
   if(strengthRanks[choice]==="2"&&hand.length>=4){
    pass(current);
    return;
   }
+  // 最後の1枚なら迷わず出す
   playCard(current,choice);
  },400);
 }
+
 $("spinButton").addEventListener("click",spinRoulette);
 $("passButton").addEventListener("click",()=>pass(0));
+$("rulesButton").addEventListener("click",()=>{$("rulesOverlay").style.display="flex";});
+$("rulesOkButton").addEventListener("click",()=>{$("rulesOverlay").style.display="none";});
+
+const ruleBindings=[
+ ["setEightCut","eightCut"],
+ ["setJBack","jBack"],
+ ["setFiveSkip","fiveSkip"],
+ ["setSevenPass","sevenPass"],
+ ["setTenDiscard","tenDiscard"],
+ ["setNineBack","nineBack"],
+ ["setBan8","ban8"],
+ ["setBan2","ban2"],
+ ["setBanJ","banJ"]
+];
+ruleBindings.forEach(([id,key])=>{
+ $(id).addEventListener("change",e=>{rules[key]=e.target.checked;});
+});
+
 initGame();
 </script>
 </body>
